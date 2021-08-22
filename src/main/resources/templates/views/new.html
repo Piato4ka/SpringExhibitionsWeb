@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New exhibition</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/main}" th:object="${exhibition}">
+    <label for="themeOfExhibition">Enter theme of exhibition: </label>
+    <input type="text" th:field="*{themeOfExhibition}" id="themeOfExhibition"/>
+    <br/>
+    <label for="ticket">Enter price of the ticket: </label>
+    <input type="text" th:field="*{ticketPrice}" id="ticket"/>
+    <br/>
+    <label for="stageNumber">Number of stage: </label>
+    <input type="text" th:field="*{stageNumber}" id="stageNumber"/>
+    <br/>
+
+<!--TODO QUESTION -->
+
+    <label for="dateOfExhibition">Set the date: </label>
+    <input type="text" th:field="*{dateOfExhibition}" id="dateOfExhibition"/>
+    <br/>
+    <input type="submit" value="Create!"/>
+</form>
+
+<a href = "/main" > <input type ="submit" value = "Go to main page"/> </a>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All exhibitions</title>
+</head>
+<body>
+All exhibitions:
+<br/>
+
+<div th:each = "exhibition : ${exhibitions}">
+    <a th:href="@{/main/{theme}(theme=${exhibition.getThemeOfExhibition()})}"  th:text="${exhibition.getThemeOfExhibition()}">theme</a>
+</div>
+
+<br/>
+<hr/>
+</form>
+<a href = "/main/new" >
+    <input type ="submit" value = "Create new exhibition"/> </a>
+</form>
+
+</body>
+</html>

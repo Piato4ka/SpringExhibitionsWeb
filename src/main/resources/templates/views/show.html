@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+Main theme: <p th:text = "${exhibition.getThemeOfExhibition()}">VALUE</p>
+Stage number: <p th:text = "${exhibition.getStageNumber()}">VALUE</p>
+Ticket price: <p th:text = "${exhibition.getTicketPrice()}">VALUE</p>
+Date: <p th:text = "${exhibition.getDateOfExhibition()}">VALUE</p>
+<br/>
+<hr/>
+
+<form th:method = "GET" th:action="@{/main/{theme}/edit(theme=${exhibition.getThemeOfExhibition()})}" >
+    <input type ="submit" value = "Edit"/>
+</form>
+
+<form th:method = "DELETE" th:action = "@{/main/{theme}(theme=${exhibition.getThemeOfExhibition()})}" >
+    <input type ="submit" value = "Delete"/>
+</form>
+
+<a href = "/main" > <input type ="submit" value = "Go to main page"/> </a>
+
+</body>
+</html>
