@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>All exhibitions</title>
@@ -9,15 +12,24 @@ All exhibitions:
 <br/>
 
 <div th:each = "exhibition : ${exhibitions}">
-    <a th:href="@{/main/{theme}(theme=${exhibition.getThemeOfExhibition()})}"  th:text="${exhibition.getThemeOfExhibition()}">theme</a>
+    <a th:href="@{/{theme}(theme=${exhibition.getThemeOfExhibition()})}"  th:text="${exhibition.getThemeOfExhibition()}">theme</a>
 </div>
 
 <br/>
 <hr/>
+
+<li sec:authorize="hasRole('ROLE_ADMIN')">
+    </form>
+    <a href = "/new" >
+        <input type ="submit" value = "Create new exhibition"/> </a>
+    </form>
+</li>
+
+<form action="/logout" method="POST">
+    <button type="submit">Logout</button>
 </form>
-<a href = "/main/new" >
-    <input type ="submit" value = "Create new exhibition"/> </a>
-</form>
+
+
 
 </body>
 </html>

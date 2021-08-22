@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/main/{theme} (theme = ${exhibition.getThemeOfExhibition()})}" th:object="${exhibition}">
+<form th:method="PATCH" th:action="@{/{theme} (theme = ${exhibition.getThemeOfExhibition()})}" th:object="${exhibition}">
     <label for="themeOfExhibition">Enter theme of exhibition: </label>
     <input type="text" th:field="*{themeOfExhibition}" id="themeOfExhibition"/>
     <br/>

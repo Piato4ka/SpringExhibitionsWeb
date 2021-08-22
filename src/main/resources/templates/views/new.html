@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/main}" th:object="${exhibition}">
+<form th:method="POST" th:action="@{/}" th:object="${exhibition}">
     <label for="themeOfExhibition">Enter theme of exhibition: </label>
     <input type="text" th:field="*{themeOfExhibition}" id="themeOfExhibition"/>
     <br/>
@@ -25,7 +25,7 @@
     <input type="submit" value="Create!"/>
 </form>
 
-<a href = "/main" > <input type ="submit" value = "Go to main page"/> </a>
+<a href = "/" > <input type ="submit" value = "Go to main page"/> </a>
 
 </body>
 </html>
