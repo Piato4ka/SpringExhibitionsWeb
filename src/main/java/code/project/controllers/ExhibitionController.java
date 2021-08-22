@@ -2,17 +2,25 @@ package code.project.controllers;
 
 import code.project.dao.ExhibitionDAO;
 import code.project.model.Exhibition;
+import code.project.model.User;
+import code.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Controller
 public class ExhibitionController {
 
-private final ExhibitionDAO exhibitionDAO;
+    private final ExhibitionDAO exhibitionDAO;
 
+    @Autowired
+    private UserService userService;
     @Autowired
     public ExhibitionController(ExhibitionDAO exhibitionDAO) {
         this.exhibitionDAO = exhibitionDAO;
@@ -28,26 +36,26 @@ private final ExhibitionDAO exhibitionDAO;
     @GetMapping("/{theme}")
     @PreAuthorize("hasAnyRole('GUEST, USER, ADMIN')")
     public String show(@PathVariable("theme") String theme, Model model) {
-    model.addAttribute("exhibition", exhibitionDAO.show(theme));
-    return "views/show";
+        model.addAttribute("exhibition", exhibitionDAO.show(theme));
+        return "views/show";
     }
 
-    @GetMapping ("/new")
+    @GetMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
-    public String newExhibition (@ModelAttribute("exhibition") Exhibition exhibition) {
-        return  "views/new";
+    public String newExhibition(@ModelAttribute("exhibition") Exhibition exhibition) {
+        return "views/new";
     }
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public String create (@ModelAttribute ("exhibition") Exhibition exhibition) {
+    public String create(@ModelAttribute("exhibition") Exhibition exhibition) {
         exhibitionDAO.save(exhibition);
         return "redirect:/";
     }
 
     @GetMapping("/{theme}/edit")
     @PreAuthorize("hasRole('ADMIN')")
-    public String edit (Model model, @PathVariable("theme") String theme) {
+    public String edit(Model model, @PathVariable("theme") String theme) {
         model.addAttribute("exhibition", exhibitionDAO.show(theme));
         return "views/edit";
     }
@@ -61,7 +69,7 @@ private final ExhibitionDAO exhibitionDAO;
 
     @DeleteMapping("/{theme}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String delete (@PathVariable ("theme") String theme) {
+    public String delete(@PathVariable("theme") String theme) {
         exhibitionDAO.delete(theme);
         return "redirect:/";
     }
@@ -71,10 +79,36 @@ private final ExhibitionDAO exhibitionDAO;
         return "views/login";
     }
 
+
+    @GetMapping(value = "/registration")
+    public ModelAndView registration() {
+        ModelAndView modelAndView = new ModelAndView();
+        User user = new User();
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("views/registration");
+        return modelAndView;
+    }
+
+    @PostMapping(value = "/registration")
+    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
+        ModelAndView modelAndView = new ModelAndView();
+        User userExists = userService.findUserByUserName(user.getUserName());
+        if (userExists != null) {
+            bindingResult
+                    .rejectValue("userName", "error.user",
+                            "There is already a user registered with the user name provided");
+        }
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("views/registration");
+        } else {
+            userService.saveUser(user);
+            modelAndView.addObject("successMessage", "User has been registered successfully");
+            modelAndView.addObject("user", new User());
+            modelAndView.setViewName("views/registration");
+
+        }
+        return modelAndView;
+    }
+
+
 }
-
-
-
-
-
-

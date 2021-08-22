@@ -18,14 +18,16 @@ All exhibitions:
 <br/>
 <hr/>
 
-<li sec:authorize="hasRole('ROLE_ADMIN')">
-    </form>
-    <a href = "/new" >
-        <input type ="submit" value = "Create new exhibition"/> </a>
-    </form>
-</li>
 
-<form action="/logout" method="POST">
+<form sec:authorize="hasRole('ADMIN')">
+<a href = "/new" >
+    <input type ="submit" value = "Create new exhibition"/> </a>
+</form>
+
+<a sec:authorize="hasRole('ROLE_ANONYMOUS')" href="/login">
+    <button type="submit">Login</button>
+</a>
+<form sec:authorize="isAuthenticated()" action="/logout" method="POST">
     <button type="submit">Logout</button>
 </form>
 
