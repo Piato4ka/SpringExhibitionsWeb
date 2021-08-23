@@ -19,7 +19,7 @@ All exhibitions:
 <hr/>
 
 
-<form sec:authorize="hasRole('ADMIN')">
+<form th:if="${user.hasRole('ADMIN')}">
 <a href = "/new" >
     <input type ="submit" value = "Create new exhibition"/> </a>
 </form>
