@@ -1,16 +1,36 @@
 package code.project.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
-
+@Data
+@Entity
+@Table(name = "exhibitions")
 public class Exhibition {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "exhibition_id")
+    private Integer id;
 
+    @Column(name = "exhibition_theme")
     private String themeOfExhibition;
+
     // TODO correct currency
+    @Column(name = "exhibition_ticketPrice")
     private double ticketPrice;
+
+    @Column(name = "exhibition_stageNumbe")
     private int stageNumber;
     // TODO period
+
+    @Column(name = "exhibition_date")
     LocalDate dateOfExhibition;
 
     public Exhibition() {
@@ -61,7 +81,6 @@ public class Exhibition {
     public LocalDate getDateOfExhibition() {
         return dateOfExhibition;
     }
-
 
 
 }

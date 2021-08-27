@@ -16,7 +16,7 @@ Date: <p th:text = "${exhibition.getDateOfExhibition()}">VALUE</p>
 <br/>
 <hr/>
 
-<li sec:authorize="hasRole('ADMIN')">
+<li th:if="${user.hasRole('ADMIN')}">
     <form th:method = "GET" th:action="@{/{theme}/edit(theme=${exhibition.getThemeOfExhibition()})}" >
         <input type ="submit" value = "Edit"/>
     </form>
@@ -29,7 +29,10 @@ Date: <p th:text = "${exhibition.getDateOfExhibition()}">VALUE</p>
 <a href = "/" > <input type ="submit" value = "Go to main page"/> </a>
 
 
-<form action="/logout" method="POST">
+<a sec:authorize="hasRole('ROLE_ANONYMOUS')" href="/login">
+    <button type="submit">Login</button>
+</a>
+<form sec:authorize="isAuthenticated()" action="/logout" method="POST">
     <button type="submit">Logout</button>
 </form>
 

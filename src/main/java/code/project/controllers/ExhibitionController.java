@@ -1,76 +1,93 @@
 package code.project.controllers;
 
-import code.project.dao.ExhibitionDAO;
 import code.project.model.Exhibition;
 import code.project.model.User;
+import code.project.service.ExhibitionService;
 import code.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.validation.Valid;
+
 
 @Controller
 public class ExhibitionController {
 
-    private final ExhibitionDAO exhibitionDAO;
-
     @Autowired
     private UserService userService;
+
     @Autowired
-    public ExhibitionController(ExhibitionDAO exhibitionDAO) {
-        this.exhibitionDAO = exhibitionDAO;
+    private ExhibitionService exhibitionService;
+
+    @Autowired
+    public ExhibitionController(UserService userService, ExhibitionService exhibitionService) {
+        this.userService = userService;
+        this.exhibitionService = exhibitionService;
     }
 
+    public ExhibitionController() {
+    }
+
+
     @GetMapping("/")
-    @PreAuthorize("hasAnyRole('GUEST, USER, ADMIN')")
     public String index(Model model) {
-        model.addAttribute("exhibitions", exhibitionDAO.index());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if (user == null)
+        {
+            user = new User();
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("exhibitions", exhibitionService.index());
         return "views/mainPage";
     }
 
-    @GetMapping("/{theme}")
-    @PreAuthorize("hasAnyRole('GUEST, USER, ADMIN')")
+    @GetMapping("/show/{theme}")
+
     public String show(@PathVariable("theme") String theme, Model model) {
-        model.addAttribute("exhibition", exhibitionDAO.show(theme));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if (user == null)
+        {
+            user = new User();
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("exhibition", exhibitionService.show(theme));
         return "views/show";
     }
 
     @GetMapping("/new")
-    @PreAuthorize("hasRole('ADMIN')")
     public String newExhibition(@ModelAttribute("exhibition") Exhibition exhibition) {
         return "views/new";
     }
 
+
     @PostMapping()
-    @PreAuthorize("hasRole('ADMIN')")
     public String create(@ModelAttribute("exhibition") Exhibition exhibition) {
-        exhibitionDAO.save(exhibition);
+        exhibitionService.saveExhibition(exhibition);
         return "redirect:/";
     }
 
     @GetMapping("/{theme}/edit")
-    @PreAuthorize("hasRole('ADMIN')")
     public String edit(Model model, @PathVariable("theme") String theme) {
-        model.addAttribute("exhibition", exhibitionDAO.show(theme));
+        model.addAttribute("exhibition", exhibitionService.show(theme));
         return "views/edit";
     }
 
     @PatchMapping("/{theme}")
-    @PreAuthorize("hasRole('ADMIN')")
     public String update(@ModelAttribute("exhibition") Exhibition exhibition, @PathVariable("theme") String theme) {
-        exhibitionDAO.update(theme, exhibition);
+        exhibitionService.update(theme, exhibition);
         return "redirect:/";
     }
 
     @DeleteMapping("/{theme}")
-    @PreAuthorize("hasRole('ADMIN')")
     public String delete(@PathVariable("theme") String theme) {
-        exhibitionDAO.delete(theme);
+        exhibitionService.delete(theme);
         return "redirect:/";
     }
 
