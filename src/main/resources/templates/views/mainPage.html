@@ -12,18 +12,17 @@ All exhibitions:
 <br/>
 
 <div th:each = "exhibition : ${exhibitions}">
-    <a th:href="@{/show/{theme}(theme=${exhibition.getThemeOfExhibition()})}"  th:text="${exhibition.getThemeOfExhibition()}">theme</a>
+    <a th:href="@{/{theme}(theme=${exhibition.getThemeOfExhibition()})}"  th:text="${exhibition.getThemeOfExhibition()}">theme</a>
 </div>
 
 <br/>
 <hr/>
 
 
-<li th:if="${user.hasRole('ADMIN')}">
-    <form th:method = "GET" th:action="@{/new}" >
-        <input type ="submit" value = "Create new exhibition"/>
-    </form>
-</li>
+<form sec:authorize="hasRole('ADMIN')">
+<a href = "/new" >
+    <input type ="submit" value = "Create new exhibition"/> </a>
+</form>
 
 <a sec:authorize="hasRole('ROLE_ANONYMOUS')" href="/login">
     <button type="submit">Login</button>
@@ -31,6 +30,8 @@ All exhibitions:
 <form sec:authorize="isAuthenticated()" action="/logout" method="POST">
     <button type="submit">Logout</button>
 </form>
+
+
 
 </body>
 </html>
